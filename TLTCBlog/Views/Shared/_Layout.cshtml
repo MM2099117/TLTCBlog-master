@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<link href="~/Content/_bootswatch.scss" />
+<link href="~/Content/_variables.scss" />
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - The Local Theatre Company</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div class="header"></div>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <a class="navbar-brand" href="#"><h2>The Local Theatre Company</h2></a>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <button type="button" class="btn btn-outline-primary">@Html.ActionLink("Local Theatre Blog", "Index", "Home")</button>
+            </li>
+            <li class="nav-item">
+                <button type="button" class="btn btn-outline-primary">@Html.ActionLink("About", "About", "Home")</button>
+            </li>
+            @Html.Partial("_LoginPartial")
+        </ul>
+    </nav>
+        
+
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - The Local Theatre Company</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

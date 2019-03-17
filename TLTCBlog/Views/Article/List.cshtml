@@ -1,0 +1,29 @@
+﻿@model List<TLTCBlog.Models.BlogArticle>
+@{
+    ViewBag.Title = "List";
+}
+
+<div class="container">
+    <div class="row">
+        @foreach (var article in Model)
+        {
+            <div class="col-sm-6"></div>
+            <article>
+                <header>
+                    <h2>
+                        @Html.ActionLink(@article.Title, "Details", "Article", new { @id = article.ArticleID }, null)
+                    </h2>
+                </header>
+                <p>
+                    @article.Content
+                </p>
+                <footer class="pull-right">
+                    <small class="Author">
+                        --Author: @article.Creator.FullName
+                    </small>
+                </footer>
+            </article>
+        }
+    </div>
+</div>
+
