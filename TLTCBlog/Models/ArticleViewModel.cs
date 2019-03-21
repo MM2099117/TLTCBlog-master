@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web;
 
 namespace TLTCBlog.Models
@@ -41,5 +42,16 @@ namespace TLTCBlog.Models
         /// </summary>
         public ICollection<Category> Categories { get; set; }
 
+        /// <summary>
+        /// property for article tags
+        /// </summary>
+        public string Tags { get; set; }
+
+        /// <summary>
+        /// navigational property for CommentViewModel
+        /// </summary>
+        public IEnumerable<CommentViewModel> Comments { get; set; }
+
+       
     }
 }

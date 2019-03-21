@@ -1,32 +1,62 @@
 ﻿@model TLTCBlog.Models.BlogArticle
+@using TLTCBlog.Models
 @{
     ViewBag.Title = "Details";
 }
 
 <div class="container">
-    <article>
-        <header>
-            <h2>
-                @Model.Title
-            </h2>
-        </header>
-        <p>
-            @Model.Content
-        </p>
-        <small class="author">
-            --author @Model.Creator.FullName
-        </small>
-        <footer class="pull-right">
-            @if (User.IsInRole("Admin") || Model.IsCreator(User.Identity.Name) || User.IsInRole("Moderator"))
+    <header>
+        <h2>
+            @Model.Title
+        </h2>
+    </header>
+    <p>
+        @Model.Content
+    </p>
+    <small class="author">
+        --author @Model.Creator.FullName
+    </small>
+    <br />
+
+    @if (Model.Comments.Any())
+    {
+
+        @:Comments:
+        <ul>
+            @foreach (var comment in Model.Comments)
             {
-                @Html.ActionLink("Edit", "Edit", "Article", new { @id = Model.ArticleID }, new { @class = "btn btn-success btn-xs" })
-                @Html.ActionLink("Delete", "Delete", "Article", new { @id = Model.ArticleID }, new { @class = "btn btn-danger btn-xs" })
-
+                <li>
+                    @comment.Text
+                    @if (@comment.Creator != null)
+                    {
+                        @: (by @comment.Creator.FullName.ToString())
+                    }
+                </li>
             }
-            @Html.ActionLink("Back", "Index", "Article", null, new { @class = "btn btn-default btn-xs" })
-        </footer>
+        </ul>
+    }
+    else
+    {
+        <p>No comments</p>
 
-    </article>
+    }
+
+    <br />
+    @if (!User.IsInRole("Suspended") && Request.IsAuthenticated)
+    {
+        @Html.ActionLink("Add Comment", "Create", "Comments", new { @id = Model.ArticleID }, new { @class = "btn btn-light btn-xs" })
+    }
+    <footer class="pull-right">
+        @if (User.IsInRole("Admin") || Model.IsCreator(User.Identity.Name) || User.IsInRole("Moderator"))
+        {
+            @Html.ActionLink("Edit", "Edit", "Article", new { @id = Model.ArticleID }, new { @class = "btn btn-success btn-xs" })
+            @Html.ActionLink("Delete", "Delete", "Article", new { @id = Model.ArticleID }, new { @class = "btn btn-danger btn-xs" })
+
+        }
+        @Html.ActionLink("Back", "Index", "Article", null, new { @class = "btn btn-default btn-xs" })
+    </footer>
+
+
 </div>
 <hr />
 

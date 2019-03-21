@@ -14,6 +14,7 @@ namespace TLTCBlog.Models
         public TLTCBlogDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
+            this.Configuration.LazyLoadingEnabled = false;
 
         }
 
@@ -23,6 +24,8 @@ namespace TLTCBlog.Models
         public virtual IDbSet<BlogArticle> BlogArticles { get; set; }
 
         public virtual IDbSet<Category> Categories { get; set; }
+
+        public virtual IDbSet<Comment> Comments { get; set; }
 
         public static TLTCBlogDbContext Create()
         {

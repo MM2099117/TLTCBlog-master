@@ -3,6 +3,7 @@ namespace TLTCBlog.Migrations
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
@@ -161,7 +162,10 @@ namespace TLTCBlog.Migrations
             {
                 ID = 2,
                 Name = "Review"
+                
             });
+
+            context.SaveChanges();
         }
 
         /// <summary>
@@ -176,19 +180,28 @@ namespace TLTCBlog.Migrations
                 Title = "REBUS: LONG SHADOWS",
                 Content = "Playwright Rona Munro has created the first Rebus play based on an original story by Rankin, and as has become her trademark, it is long on dialogue and drama. " +
                 "Tightly written and atmospheric throughout, fans of the novels will be pleased that it has just as many twists and turns",
-                CreatorID = context.Users.First().Id
-
+                CreatorID = context.Users.FirstOrDefault().Id,
+                CategoryID = 1,
+                Category = context.Categories.OrderBy(c => c.Name).FirstOrDefault(),
+          
             });
 
-           context.BlogArticles.Add(new BlogArticle()
-           {
+            context.BlogArticles.Add(new BlogArticle()
+            {
                 Title = "THE GHOSTING OF RABBIE BURNS",
                 Content = "A modern rom com, The Ghosting of Rabbie Burns also manages to weave in a raft of fascinating facts about the Ploughman Poet," +
-                " the narrative perfectly enhanced by the inclusion of the brightest and best songs and poems of Burns. Both Young and Mackenzie do a fine job of showcasing the bard’s work:" +
-                " My Love is Like a Red Red Rose; Ae Fond Kiss; Charlie is my Darlin’ ; " +
-                "John Anderson, My Jo and of course, Auld Lang Syne (with some audience participation) are just beautiful.",
-               CreatorID = context.Users.First().Id
-           });
+                 " the narrative perfectly enhanced by the inclusion of the brightest and best songs and poems of Burns. Both Young and Mackenzie do a fine job of showcasing the bard’s work:" +
+                 " My Love is Like a Red Red Rose; Ae Fond Kiss; Charlie is my Darlin’ ; " +
+                 "John Anderson, My Jo and of course, Auld Lang Syne (with some audience participation) are just beautiful.",
+                CreatorID = context.Users.FirstOrDefault().Id,
+                CategoryID = 2,
+                Category = context.Categories.OrderBy(c => c.Name).FirstOrDefault(),
+                Comments = new HashSet<Comment>
+                {
+                    new Comment() { Text = "Fantastic show!", Creator = context.Users.FirstOrDefault()}
+                }
+
+            });
 
             context.BlogArticles.Add(new BlogArticle()
             {
@@ -196,7 +209,15 @@ namespace TLTCBlog.Migrations
                 Content = "Four Glasgow playwrights have teamed up to present a quartet of plays as part of the Glasgow International Comedy Festival next month. " +
                 "Short Attention Span Theatre is a method of theatre which delivers exactly what it says on the tin: short dramas for those with short attention spans as well as those who like to experience" +
                 " a variety of works in one evening. ",
-                CreatorID = context.Users.First().Id
+                CreatorID = context.Users.FirstOrDefault().Id,
+                CategoryID = 2,
+                Category = context.Categories.OrderBy(c => c.Name).FirstOrDefault(),
+                Comments = new HashSet<Comment>
+                {
+                    new Comment() { Text = "Exciting news!", Creator = context.Users.FirstOrDefault()}
+                }
+
+
             });
 
            
@@ -206,7 +227,14 @@ namespace TLTCBlog.Migrations
                 Title = "NEWS: SAILOR JERRY RETURNS TO SCOTLAND FOR ‘CITY TAKEOVERS’ HONOURING BOLD LOCAL TALENT",
                 Content = "Throughout the month ‘flash art’ inspired by the iconic designs of Sailor Jerry’s namesake, legendary tattoo artist Norman Collins, will appear across the three cities. " +
                 "Residents are encouraged to #SJFollowTheFlash by visiting participating hotspots, including bars, restaurants, tattoo shops and barbers, as well as city walls and university campuses, to be in with a chance of winning tickets to a once-in-a-lifetime experience…",
-                CreatorID = context.Users.First().Id
+                CreatorID = context.Users.FirstOrDefault().Id,
+                CategoryID = 1,
+                Category = context.Categories.OrderBy(c => c.Name).FirstOrDefault(),
+                Comments = new HashSet<Comment>
+                {
+                    new Comment() { Text = "What?", Creator = context.Users.FirstOrDefault()}
+                }
+
             });
 
          

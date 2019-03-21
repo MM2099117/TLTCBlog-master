@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -44,9 +45,9 @@ namespace TLTCBlog.Controllers
 
             using (var DB = new TLTCBlogDbContext())
             {
-                var article = DB.BlogArticles.Where(a=> a.ArticleID == id).Include(a => a.Creator).First();
+                var article = DB.BlogArticles.Where(a=> a.ArticleID == id).Include(a => a.Creator).Include(a=> a.Comments).First();
                 
-
+                
                 if (article == null)
                 {
                     return HttpNotFound();
@@ -69,9 +70,9 @@ namespace TLTCBlog.Controllers
             using (var DB = new TLTCBlogDbContext())
             {
                 var model = new ArticleViewModel();
-                model.Categories.OrderBy(c => c.Name).ToList();
-                return View(model);
+                model.Categories = DB.Categories.OrderBy(c => c.Name).ToList();
 
+                return View(model);
             }
         }
 
@@ -92,7 +93,15 @@ namespace TLTCBlog.Controllers
                     ///GET: Article Creator ID
                     var CreatorID = DB.Users.Where(u => u.UserName == this.User.Identity.Name).First().Id;
 
-                    var article = new BlogArticle(CreatorID, model.Title, model.Content, model.CategoryID);
+                    ///GET: Article
+                    var article = new BlogArticle()
+                    {
+                        CreatorID = this.User.Identity.GetUserId(),
+                        Title = model.Title,
+                        Content = model.Content,
+                        CategoryID = model.CategoryID,
+                        
+                    };
 
                     ///SET: Article Creator details
                     article.CreatorID = CreatorID;
@@ -111,7 +120,7 @@ namespace TLTCBlog.Controllers
                     return RedirectToAction("Index");
                 }
             }
-            return View(model);
+            return this.View(model);
         }
 
         /// <summary>
@@ -130,7 +139,9 @@ namespace TLTCBlog.Controllers
             using (var DB = new TLTCBlogDbContext())
             {
                 ///Get Article from database
-                var article = DB.BlogArticles.Where(a => a.ArticleID == id).Include(a => a.Creator).First();
+                var article = DB.BlogArticles.Where(a => a.ArticleID == id).Include(a => a.Creator)
+                    .Include(a=> a.Category)
+                    .First();
 
                 ///if the user is not authorized to edit the article
                 if(!IsUserAuthorizedToEdit(article))
@@ -138,6 +149,7 @@ namespace TLTCBlog.Controllers
                     ///does not allow delete access
                     return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
                 }
+
                 ///check if article exists
                 if (article == null)
                 {
@@ -222,7 +234,8 @@ namespace TLTCBlog.Controllers
                 model.Id = article.ArticleID;
                 model.Title = article.Title;
                 model.Content = article.Content;
-
+                model.CategoryID = article.CategoryID;
+                model.Categories = DB.Categories.OrderBy(c => c.Name).ToList();
                 /// passes the model to the view
                 return View(model);
             }
@@ -250,6 +263,7 @@ namespace TLTCBlog.Controllers
                     /// set article properties
                     article.Title = model.Title;
                     article.Content = model.Content;
+                    article.CategoryID = model.CategoryID;
 
                     /// save new article state to DB 
                     DB.Entry(article).State = EntityState.Modified;
@@ -278,6 +292,7 @@ namespace TLTCBlog.Controllers
             return isAdmin || isCreator;
         }
 
+        
 
 
     }

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using TLTCBlog.Controllers;
 
 namespace TLTCBlog.Models
 {
@@ -11,27 +12,18 @@ namespace TLTCBlog.Models
     {
 
         /// <summary>
-        /// empty constructor
+        /// constructor
         /// </summary>
         public BlogArticle()
-        {
-
-        }
-
-        /// <summary>
-        /// constructor for new articles with all params
-        /// </summary>
-        /// <param name="CreatorID"></param>
-        /// <param name="Title"></param>
-        /// <param name="Content"></param>
-        /// <param name="categoryID"></param>
-        public BlogArticle(string CreatorID, string Title, string Content, int? categoryID)
         {
             this.CreatorID = CreatorID;
             this.Title = Title;
             this.Content = Content;
-            this.CategoryID = categoryID;
+            this.CategoryID = CategoryID;
+            this.Comments = new HashSet<Comment>();
         }
+
+        
 
         /// <summary>
         /// Primary Key
@@ -56,7 +48,7 @@ namespace TLTCBlog.Models
         /// Foreign Key
         /// CreatorID = UserID
         /// </summary>
-        [ForeignKey("Creator")]
+        [InverseProperty("Creator")]
         public string CreatorID { get; set; }
 
         /// <summary>
@@ -71,24 +63,29 @@ namespace TLTCBlog.Models
         /// <returns>true/false</returns>
         public bool IsCreator(string name)
         {
-            return this.Creator.UserName.Equals(name);
+            return Creator.UserName.Equals(name);
         }
 
         /// <summary>
         /// Foreign Key to Category table
         /// </summary>
-        [ForeignKey("Category")]
+        [InverseProperty("Category")]
         public int? CategoryID { get; set; }
+
 
         /// <summary>
         /// Navigational Property for the Category 
         /// </summary>
         public virtual Category Category { get; set; }
 
-        
+
+
+        /// <summary>
+        /// Navigational Property for Comments
+        /// </summary>
+        public virtual ICollection<Comment> Comments { get; set; }
 
         
-
 
     }
 }
